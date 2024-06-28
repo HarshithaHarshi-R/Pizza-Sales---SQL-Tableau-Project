@@ -1,5 +1,10 @@
 # Pizza Sales SQL & Tableau Project
 
+
+![Pizza_sales ss](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/856a23f9-516d-4f5f-a00c-ca236d391b0b)
+
+
+
 ## Table of Contents
 
 - [Project Overview](#project-overview)
@@ -7,6 +12,7 @@
 - [Data Source](#data-source)
 - [Tools](#tools)
 - [Questions](#questions)
+- [SQL Query](#sql-query)
 - [Findings](#findings)
   
 ### Project Overview
@@ -43,6 +49,107 @@ The dataset utilized for this analysis was sourced from [Kaggle](https://www.kag
 9.	How many pizzas have been sold in each pizza category?
 10.	What are the top 5 pizza items based on total quantity sold?
 11.	What are the bottom 5 pizza items based on total quantity sold?
+
+### SQL Query
+1. Total Revenue 
+SELECT SUM(total_price) AS Total_Revenue
+FROM pizza_sales
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/940add08-3272-4650-9bf1-276b94249a3e)
+
+
+2. Avg_order_value
+SELECT ROUND(SUM(total_price) / COUNT(DISTINCT order_id),2) AS Average_order_value
+FROM pizza_sales
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/b4c517e7-ebf6-441e-a6cf-c1a0a1635c5b)
+
+
+
+3. Total_pizza_sold
+SELECT SUM(quantity) AS Total_pizza_sold
+FROM pizza_sales
+
+ ![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/5aa39af1-5de3-4c1c-a502-92b0d655374f)
+
+
+ 
+4. Total_order
+SELECT COUNT(DISTINCT order_id) AS Total_order
+FROM pizza_sales
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/07a12ea4-57e4-4691-9b06-39f090216622)
+
+
+
+5. Avg_pizza_per_order
+SELECT CAST(SUM(quantity) / COUNT(DISTINCT order_id) AS DECIMAL (10,2)) AS Avg_pizza_per_order
+FROM pizza_sales
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/5c76a4ea-e760-409e-92fb-9dcb3fc144b4)
+
+
+
+6. Hourly trend
+SELECT HOUR(order_time) AS order_hours,SUM(quantity) AS Total_pizza_sold
+FROM pizza_sales
+GROUP BY HOUR(order_time)
+ORDER BY HOUR(order_time);
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/e70802db-9bcd-45c7-9bea-ed4d75652fdf)
+
+
+
+7. Percentage of sales by pizza category
+SELECT pizza_category, CAST(sum(total_price) * 100/ (SELECT sum(total_price) FROM pizza_sales) AS DECIMAL (10,2)) AS percentage_of_sales_Category
+FROM pizza_sales
+GROUP BY pizza_category
+ORDER BY percentage_of_sales_Category DESC
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/6c89e8fe-725d-4adf-a5d2-bb38bc08fcd6)
+
+
+
+8. Percentage of sales by pizza size
+SELECT pizza_size, ROUND(SUM(total_price),2) AS Total_sales, ROUND(sum(total_price) * 100/ (SELECT SUM(total_price) FROM pizza_sales),2) AS percentage_of_sales_by_size
+FROM pizza_sales
+GROUP BY pizza_size
+ORDER BY percentage_of_sales_by_size DESC
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/46a5666d-f4b8-4668-874f-430e94e666d1)
+
+
+
+9.Total pizza sold by category
+SELECT pizza_category, sum(quantity) AS Total_pizza_sold
+FROM pizza_sales
+GROUP BY pizza_category
+ORDER BY Total_pizza_sold DESC
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/eff85778-a489-4811-8193-bde241a57f0e)
+
+
+
+10. Top 5 best sellers by total pizza sold
+SELECT pizza_name, sum(quantity) AS Total_pizza_sold
+FROM pizza_sales
+GROUP BY pizza_name
+ORDER BY Total_pizza_sold DESC
+LIMIT 5
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/69eaf833-eabd-47a5-b511-67fafae2c2ee)
+
+
+
+11. Bottom 5 sellers by total pizza sold
+SELECT pizza_name, sum(quantity) AS Total_pizza_sold
+FROM pizza_sales
+GROUP BY pizza_name
+ORDER BY Total_pizza_sold
+LIMIT 5
+
+![image](https://github.com/HarshithaHarshi-R/Pizza-Sales---SQL-Tableau-Project/assets/168059578/cf89c7f6-3404-4b02-8168-037d5a6848e3)
+
 
 
 ### Findings:
